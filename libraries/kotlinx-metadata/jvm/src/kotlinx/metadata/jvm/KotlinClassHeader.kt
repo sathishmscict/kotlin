@@ -37,5 +37,11 @@ class KotlinClassHeader(
         const val SYNTHETIC_CLASS_KIND = 3
         const val MULTI_FILE_CLASS_FACADE_KIND = 4
         const val MULTI_FILE_CLASS_PART_KIND = 5
+
+        @JvmField
+        val COMPATIBLE_METADATA_VERSION = intArrayOf(1, 1, 10)
+
+        @JvmField
+        val COMPATIBLE_BYTECODE_VERSION = intArrayOf(1, 0, 2)
     }
 }

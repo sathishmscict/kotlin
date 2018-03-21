@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license
+ * Copyright 2010-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license
  * that can be found in the license/LICENSE.txt file.
  */
 
@@ -68,6 +68,7 @@ enum class LanguageFeature(
     InlineClasses(KOTLIN_1_3),
     ProhibitVisibilityOfNestedClassifiersFromSupertypesOfCompanion(KOTLIN_1_3),
     ProhibitNonConstValuesAsVarargsInAnnotations(KOTLIN_1_3),
+    ReleaseCoroutines(KOTLIN_1_3),
 
     StrictJavaNullabilityAssertions(sinceVersion = null, defaultState = State.DISABLED),
     ProperIeee754Comparisons(sinceVersion = null, defaultState = State.DISABLED),

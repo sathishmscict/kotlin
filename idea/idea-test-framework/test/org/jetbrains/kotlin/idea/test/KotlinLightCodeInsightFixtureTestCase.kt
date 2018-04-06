@@ -29,6 +29,7 @@ import com.intellij.testFramework.LightProjectDescriptor
 import com.intellij.testFramework.LoggedErrorProcessor
 import org.apache.log4j.Logger
 import org.jetbrains.kotlin.config.LanguageFeature
+import org.jetbrains.kotlin.config.LanguageVersion
 import org.jetbrains.kotlin.idea.KotlinFileType
 import org.jetbrains.kotlin.idea.actions.internal.KotlinInternalMode
 import org.jetbrains.kotlin.idea.facet.configureFacet
@@ -180,19 +181,31 @@ abstract class KotlinLightCodeInsightFixtureTestCase : KotlinLightCodeInsightFix
     }
 }
 
-fun configureLanguageVersion(fileText: String, project: Project, module: Module) {
+fun configureLanguageVersionByDirective(fileText: String, project: Project, module: Module) {
     val version = InTextDirectivesUtils.findStringWithPrefixes(fileText, "// LANGUAGE_VERSION: ")
     if (version != null) {
-        val accessToken = WriteAction.start()
-        try {
-            val modelsProvider = IdeModifiableModelsProviderImpl(project)
-            val facet = module.getOrCreateFacet(modelsProvider, useProjectSettings = false)
-            facet.configureFacet(version, LanguageFeature.State.DISABLED, null, modelsProvider)
-            modelsProvider.commit()
+        configureLanguageAndApiVersion(project, module, version)
+    }
+}
+
+fun configureLanguageAndApiVersion(
+    project: Project,
+    module: Module,
+    languageVersion: String,
+    apiVersion: String? = null
+) {
+    val accessToken = WriteAction.start()
+    try {
+        val modelsProvider = IdeModifiableModelsProviderImpl(project)
+        val facet = module.getOrCreateFacet(modelsProvider, useProjectSettings = false)
+        facet.configureFacet(languageVersion, LanguageFeature.State.DISABLED, null, modelsProvider)
+        if (apiVersion != null) {
+            facet.configuration.settings.apiLevel = LanguageVersion.fromVersionString(apiVersion)
         }
-        finally {
-            accessToken.finish()
-        }
+        modelsProvider.commit()
+    }
+    finally {
+        accessToken.finish()
     }
 }
 

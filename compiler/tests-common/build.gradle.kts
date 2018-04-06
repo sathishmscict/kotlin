@@ -30,8 +30,9 @@ dependencies {
     testCompile(commonDep("junit:junit"))
     testCompile(androidDxJar()) { isTransitive = false }
     testCompile(intellijCoreDep()) { includeJars("intellij-core"); isTransitive = false }
+    testCompile("org.picocontainer:picocontainer:1.2")
     testCompile(intellijDep()) {
-        includeJars("openapi", "platform-api", "platform-impl", "idea", "idea_rt", "guava", "trove4j", "picocontainer", "asm-all", "log4j", "jdom", "bootstrap", "annotations", rootProject = rootProject)
+        includeJars("openapi", "platform-api", "platform-impl", "idea", "idea_rt", "guava", "trove4j", "asm-all", "log4j", "jdom", "bootstrap", "annotations", rootProject = rootProject)
         isTransitive = false
     }
 }

@@ -10,7 +10,7 @@ dependencies {
     compile(project(":compiler:frontend.java"))
     compileOnly(intellijDep()) { includeJars("annotations", "openapi", "idea", "platform-api", "platform-impl", "java-api",
                                              "java-impl", "extensions", "util", "bootstrap", "gson",
-                                             "swingx-core", "forms_rt", "jdom", "log4j", "guava", "asm-all", "picocontainer",
+                                             "swingx-core", "forms_rt", "jdom", "log4j", "guava", "asm-all",
                                              rootProject = rootProject) }
     compileOnly(commonDep("com.google.code.findbugs", "jsr305"))
 
@@ -21,6 +21,7 @@ dependencies {
     compileOnly(intellijPluginDep("IntelliLang"))
     compileOnly(intellijPluginDep("copyright"))
     compileOnly(intellijPluginDep("properties"))
+    compileOnly("org.picocontainer:picocontainer:1.2")
     compileOnly(intellijPluginDep("java-i18n"))
 }
 

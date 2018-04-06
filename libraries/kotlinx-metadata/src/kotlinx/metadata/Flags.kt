@@ -100,4 +100,9 @@ object Flags {
         val isCrossinline = MetadataFlag(IS_CROSSINLINE)
         val isNoinline = MetadataFlag(IS_NOINLINE)
     }
+
+    object EffectExpression {
+        val isNegated = MetadataFlag(IS_NEGATED)
+        val isNullCheckPredicate = MetadataFlag(IS_NULL_CHECK_PREDICATE)
+    }
 }

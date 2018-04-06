@@ -662,7 +662,7 @@ private val CLASS_FLAGS_MAP = COMMON_FLAGS_MAP + mapOf(
     Flags.Class.isCompanionObject to "companion object"
 )
 
-private val CONSTRUCTOR_FLAGS_MAP = COMMON_FLAGS_MAP + mapOf(
+private val CONSTRUCTOR_FLAGS_MAP = COMMON_FLAGS_MAP + mapOf( // TODO: get rid of modality here
     Flags.Constructor.isPrimary to "/* primary */"
 )
 

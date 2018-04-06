@@ -436,6 +436,21 @@ public class SafeDeleteTestGenerated extends AbstractSafeDeleteTest {
         }
     }
 
+    @TestMetadata("idea/testData/refactoring/safeDelete/deleteFunction/javaMethod")
+    @TestDataPath("$PROJECT_ROOT")
+    @RunWith(JUnit3RunnerWithInners.class)
+    public static class JavaMethod extends AbstractSafeDeleteTest {
+        public void testAllFilesPresentInJavaMethod() throws Exception {
+            KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("idea/testData/refactoring/safeDelete/deleteFunction/javaMethod"), Pattern.compile("^(.+)\\.java$"), TargetBackend.ANY, true);
+        }
+
+        @TestMetadata("pureJavaWithPrivatizing.java")
+        public void testPureJavaWithPrivatizing() throws Exception {
+            String fileName = KotlinTestUtils.navigationMetadata("idea/testData/refactoring/safeDelete/deleteFunction/javaMethod/pureJavaWithPrivatizing.java");
+            doJavaMethodTest(fileName);
+        }
+    }
+
     @TestMetadata("idea/testData/refactoring/safeDelete/deleteProperty/kotlinProperty")
     @TestDataPath("$PROJECT_ROOT")
     @RunWith(JUnit3RunnerWithInners.class)

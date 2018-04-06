@@ -113,6 +113,7 @@ public abstract class AbstractSafeDeleteTest extends KotlinLightCodeInsightFixtu
         Editor[] editors = new Editor[filePaths.length];
         int i = 0;
         for (String filePath : filePaths) {
+            if (!new File(myFixture.getTestDataPath() + "/" + filePath).exists()) continue;
             myFixture.configureByFile(filePath);
             editors[i++] = myFixture.getEditor();
         }

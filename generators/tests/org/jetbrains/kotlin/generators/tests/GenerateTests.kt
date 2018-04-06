@@ -403,6 +403,7 @@ fun main(args: Array<String>) {
             model("refactoring/safeDelete/deleteFunction/kotlinFunction", testMethod = "doFunctionTest")
             model("refactoring/safeDelete/deleteFunction/kotlinFunctionWithJava", testMethod = "doFunctionTestWithJava")
             model("refactoring/safeDelete/deleteFunction/javaFunctionWithKotlin", testMethod = "doJavaMethodTest")
+            model("refactoring/safeDelete/deleteFunction/javaMethod", extension = "java", testMethod = "doJavaMethodTest")
             model("refactoring/safeDelete/deleteProperty/kotlinProperty", testMethod = "doPropertyTest")
             model("refactoring/safeDelete/deleteProperty/kotlinPropertyWithJava", testMethod = "doPropertyTestWithJava")
             model("refactoring/safeDelete/deleteProperty/javaPropertyWithKotlin", testMethod = "doJavaPropertyTest")

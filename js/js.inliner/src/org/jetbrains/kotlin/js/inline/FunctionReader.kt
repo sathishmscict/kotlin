@@ -178,35 +178,25 @@ class FunctionReader(
         override fun toString() = text.substring(offset)
     }
 
-    private val readCache = mutableMapOf<CallableDescriptor, FunctionWithWrapper?>()
+    private val emptyFunctionWrapper = FunctionWithWrapperHandle()
 
-    private val functionCache = object : SLRUCache<CallableDescriptor, FunctionWithWrapper>(50, 50) {
-        override fun createValue(descriptor: CallableDescriptor): FunctionWithWrapper =
-                readFunction(descriptor).sure { "Could not read function: $descriptor" }
+    private val functionCache = object : SLRUCache<CallableDescriptor, FunctionWithWrapperHandle>(50, 50) {
+        override fun createValue(descriptor: CallableDescriptor): FunctionWithWrapperHandle =
+            readFunction(descriptor) ?: emptyFunctionWrapper
     }
 
-    operator fun contains(descriptor: CallableDescriptor): Boolean {
-        return functionCache.getIfCached(descriptor) != null || readFunction(descriptor) != null
-    }
-
-    operator fun get(descriptor: CallableDescriptor): FunctionWithWrapper = functionCache.get(descriptor)
+    operator fun get(descriptor: CallableDescriptor): FunctionWithWrapper? = functionCache.get(descriptor) as? FunctionWithWrapper
 
     private fun readFunction(descriptor: CallableDescriptor): FunctionWithWrapper? {
         val moduleName = getModuleName(descriptor)
 
         if (moduleName !in moduleNameToInfo.keys()) return null
 
-        if (descriptor in readCache) return readCache[descriptor]
-
         for (info in moduleNameToInfo[moduleName]) {
             val function = readFunctionFromSource(descriptor, info)
-            if (function != null) {
-                readCache[descriptor] = function
-                return function
-            }
+            if (function != null) return function
         }
 
-        readCache[descriptor] = null
         return null
     }
 

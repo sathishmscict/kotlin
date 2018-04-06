@@ -89,7 +89,8 @@ abstract class FunctionContext(private val functionReader: FunctionReader, priva
         /** remove ending `()` */
         val callQualifier: JsExpression = if (isCallInvocation(call)) {
             (call.qualifier as JsNameRef).qualifier!!
-        } else {
+        }
+        else {
             call.qualifier
         }
 
@@ -107,13 +108,10 @@ abstract class FunctionContext(private val functionReader: FunctionReader, priva
         }
     }
 
-    private fun lookUpFunctionDirect(descriptor: CallableDescriptor): FunctionWithWrapper? {
-        return lookUpStaticFunctionByTag(Namer.getFunctionTag(descriptor, config))?.let { return it }
-    }
+    private fun lookUpFunctionDirect(descriptor: CallableDescriptor): FunctionWithWrapper? =
+        lookUpStaticFunctionByTag(Namer.getFunctionTag(descriptor, config))
 
-    private fun lookUpFunctionExternal(descriptor: CallableDescriptor): FunctionWithWrapper? {
-        return if (descriptor in functionReader) functionReader[descriptor] else null
-    }
+    private fun lookUpFunctionExternal(descriptor: CallableDescriptor): FunctionWithWrapper? = functionReader[descriptor]
 
     private fun tryExtractCallableReference(invocation: JsInvocation): FunctionWithWrapper? {
         if (invocation.isCallableReference) {

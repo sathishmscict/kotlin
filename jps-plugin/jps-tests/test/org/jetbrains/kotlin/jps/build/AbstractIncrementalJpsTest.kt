@@ -58,6 +58,7 @@ import org.jetbrains.kotlin.jps.incremental.getKotlinCache
 import org.jetbrains.kotlin.jps.incremental.withLookupStorage
 import org.jetbrains.kotlin.jps.model.JpsKotlinFacetModuleExtension
 import org.jetbrains.kotlin.jps.model.kotlinFacetExtension
+import org.jetbrains.kotlin.jps.platforms.clearKotlinModuleBuildTargetDataBindings
 import org.jetbrains.kotlin.test.KotlinTestUtils
 import org.jetbrains.kotlin.utils.Printer
 import java.io.*
@@ -129,6 +130,7 @@ abstract class AbstractIncrementalJpsTest(
     }
 
     override fun tearDown() {
+        clearKotlinModuleBuildTargetDataBindings()
         restoreSystemProperties()
         (AbstractIncrementalJpsTest::myProject).javaField!![this] = null
         (AbstractIncrementalJpsTest::projectDescriptor).javaField!![this] = null

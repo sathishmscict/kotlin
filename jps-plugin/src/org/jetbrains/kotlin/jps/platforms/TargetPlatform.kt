@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.jps.platforms
 
+import org.jetbrains.annotations.TestOnly
 import org.jetbrains.jps.builders.java.JavaModuleBuildTargetType
 import org.jetbrains.jps.incremental.ModuleBuildTarget
 import org.jetbrains.jps.model.java.JpsJavaModuleType
@@ -66,4 +67,9 @@ private fun ModuleBuildTarget.hasJsStdLib(): Boolean {
     }
 
     return false
+}
+
+@TestOnly
+internal fun clearKotlinModuleBuildTargetDataBindings() {
+    kotlinBuildTargetsData.clear()
 }

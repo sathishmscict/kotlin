@@ -807,28 +807,34 @@ open class KotlinJpsBuildTest : AbstractKotlinJpsBuildTestCase() {
     }
 
     fun testFileDoesNotExistWarning() {
+        fun absoluteFiles(vararg paths: String): Array<File> =
+            paths.map { File(it).absoluteFile }.toTypedArray()
+
         initProject(JVM_MOCK_RUNTIME)
 
+        val filesToBeReported = absoluteFiles("badroot.jar", "some/test.class")
+        val otherFiles = absoluteFiles("test/other/file.xml", "some/other/baddir")
+
         AbstractKotlinJpsBuildTestCase.addDependency(
-                JpsJavaDependencyScope.COMPILE, Lists.newArrayList(findModule("module")), false, "LibraryWithBadRoots",
-                File("badroot.jar"),
-                File("test/other/file.xml"),
-                File("some/test.class"),
-                File("some/other/baddir"))
+            JpsJavaDependencyScope.COMPILE,
+            Lists.newArrayList(findModule("module")),
+            false,
+            "LibraryWithBadRoots",
+            *(filesToBeReported + otherFiles)
+        )
 
         val result = buildAllModules()
         result.assertSuccessful()
 
-        val warnings = result.getMessages(BuildMessage.Kind.WARNING)
+        val warningPrefix = "Classpath entry points to a non-existent location:"
+        val actualWarnings = result.getMessages(BuildMessage.Kind.WARNING)
+            .mapNotNull { it.messageText.takeIf { text -> text.startsWith(warningPrefix) } }
+        val expectedWarnings = filesToBeReported.map { "$warningPrefix $it" }
 
-        Assert.assertArrayEquals(
-                arrayOf(
-                        """Classpath entry points to a non-existent location: TEST_PATH/badroot.jar""",
-                        """Classpath entry points to a non-existent location: TEST_PATH/some/test.class"""),
-                warnings.map {
-                    it.messageText.replace(File("").absolutePath, "TEST_PATH").replace("\\", "/")
-                }.sorted().toTypedArray()
-        )
+        val expectedText = expectedWarnings.sorted().joinToString("\n")
+        val actualText = actualWarnings.sorted().joinToString("\n")
+
+        Assert.assertEquals(expectedText, actualText)
     }
 
     fun testHelp() {

@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.load.java.descriptors.JavaMethodDescriptor
 import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.resolve.DescriptorToSourceUtils
 import org.jetbrains.kotlin.resolve.DescriptorUtils
+import org.jetbrains.kotlin.resolve.OverridingUtil
 import org.jetbrains.kotlin.resolve.annotations.JVM_DEFAULT_FQ_NAME
 import org.jetbrains.kotlin.resolve.annotations.hasJvmDefaultAnnotation
 import org.jetbrains.kotlin.resolve.checkers.DeclarationChecker
@@ -55,10 +56,13 @@ class JvmDefaultChecker(val jvmTarget: JvmTarget) : DeclarationChecker {
         if (memberDescriptor.overriddenDescriptors.any { it.annotations.hasAnnotation(JVM_DEFAULT_FQ_NAME) }) {
             context.trace.report(ErrorsJvm.JVM_DEFAULT_REQUIRED_FOR_OVERRIDE.on(declaration))
         } else if (enableJvmDefault) {
-            memberDescriptor.overriddenDescriptors.asSequence().map { DescriptorUtils.unwrapFakeOverrideToAnyDeclaration(it) }
-                .firstOrNull { it is JavaMethodDescriptor && it.kind != Modality.ABSTRACT }?.let {
-                    context.trace.report(ErrorsJvm.NON_JVM_DEFAULT_OVERRIDES_JAVA_DEFAULT.on(declaration))
+            descriptor.overriddenDescriptors.flatMap { OverridingUtil.getOverriddenDeclarations(it) }.toSet().let {
+                for (realDescriptor in OverridingUtil.filterOutOverridden(it)) {
+                    if (realDescriptor is JavaMethodDescriptor && realDescriptor.modality != Modality.ABSTRACT) {
+                        return context.trace.report(ErrorsJvm.NON_JVM_DEFAULT_OVERRIDES_JAVA_DEFAULT.on(declaration))
+                    }
                 }
+            }
         }
     }
 

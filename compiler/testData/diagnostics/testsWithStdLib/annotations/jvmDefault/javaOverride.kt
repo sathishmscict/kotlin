@@ -7,6 +7,8 @@ public interface JavaInterface {
     default void test() {}
 
     default void testForNonDefault() {}
+
+    void testAbstract();
 }
 
 // FILE: 1.kt
@@ -16,6 +18,17 @@ interface KotlinInterface : JavaInterface {
     override fun test() {}
 
     <!NON_JVM_DEFAULT_OVERRIDES_JAVA_DEFAULT!>override fun testForNonDefault()<!> {}
+
+    override fun testAbstract() {}
+}
+
+interface KotlinInterface2 : JavaInterface, KotlinInterface {
+    @JvmDefault
+    override fun test() {}
+
+    override fun testForNonDefault() {}
+
+    override fun testAbstract() {}
 }
 
 
@@ -29,21 +42,25 @@ interface KotlinInterfaceInderectInheritance : KotlinInterfaceForIndirect {
     override fun test() {}
 
     <!NON_JVM_DEFAULT_OVERRIDES_JAVA_DEFAULT!>override fun testForNonDefault()<!> {}
+
+    override fun testAbstract() {}
 }
 
 open class KotlinClass : JavaInterface {
     override fun test() {}
 
     override fun testForNonDefault() {}
+
+    override fun testAbstract() {}
 }
-
-
 
 interface KotlinInterfaceX  {
 
     fun test() {}
 
     fun testForNonDefault() {}
+
+    fun testAbstract() {}
 }
 
 interface KotlinInterfaceManySuper: JavaInterface, KotlinInterfaceX {
@@ -51,4 +68,6 @@ interface KotlinInterfaceManySuper: JavaInterface, KotlinInterfaceX {
     override fun test() {}
 
     <!NON_JVM_DEFAULT_OVERRIDES_JAVA_DEFAULT!>override fun testForNonDefault()<!> {}
+
+    override fun testAbstract() {}
 }

@@ -8,9 +8,7 @@ package org.jetbrains.kotlin.js.translate.context;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.config.CommonConfigurationKeysKt;
-import org.jetbrains.kotlin.config.LanguageVersionSettings;
-import org.jetbrains.kotlin.config.LanguageFeature;
+import org.jetbrains.kotlin.config.*;
 import org.jetbrains.kotlin.descriptors.*;
 import org.jetbrains.kotlin.descriptors.annotations.Annotations;
 import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor;
@@ -124,7 +122,7 @@ public class TranslationContext {
             FunctionDescriptor function = (FunctionDescriptor) declarationDescriptor;
             if (function.isSuspend()) {
                 ClassDescriptor continuationDescriptor =
-                        DescriptorUtilKt.findContinuationClassDescriptor(getCurrentModule(), NoLookupLocation.FROM_BACKEND, getLanguageVersionSettings().supportsFeature(LanguageFeature.ReleaseCoroutines));
+                        DescriptorUtilKt.findContinuationClassDescriptor(getCurrentModule(), NoLookupLocation.FROM_BACKEND, createLanguageVersionSettingsForCoroutines().supportsFeature(LanguageFeature.ReleaseCoroutines));
 
                 return new LocalVariableDescriptor(
                         declarationDescriptor,
@@ -927,8 +925,9 @@ public class TranslationContext {
         return staticContext.getVariableForPropertyMetadata(property);
     }
 
+    // TODO: Replace with real languageVersionSettings
     @NotNull
-    public LanguageVersionSettings getLanguageVersionSettings() {
-        return CommonConfigurationKeysKt.getLanguageVersionSettings(staticContext.getConfig().getConfiguration());
+    public static LanguageVersionSettings createLanguageVersionSettingsForCoroutines() {
+        return new LanguageVersionSettingsImpl(LanguageVersion.KOTLIN_1_2, ApiVersion.KOTLIN_1_2);
     }
 }

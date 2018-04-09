@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.js.inline.context.FunctionContext;
 import org.jetbrains.kotlin.js.inline.context.InliningContext;
 import org.jetbrains.kotlin.js.inline.context.NamingContext;
 import org.jetbrains.kotlin.js.inline.util.*;
+import org.jetbrains.kotlin.js.translate.context.TranslationContext;
 import org.jetbrains.kotlin.js.translate.expression.InlineMetadata;
 import org.jetbrains.kotlin.resolve.inline.InlineStrategy;
 
@@ -494,8 +495,7 @@ public class JsInliner extends JsVisitorWithContextImpl {
     private static boolean isSuspendWithCurrentContinuation(@Nullable DeclarationDescriptor descriptor) {
         if (!(descriptor instanceof FunctionDescriptor)) return false;
         return CommonCoroutineCodegenUtilKt.isBuiltInSuspendCoroutineOrReturn(
-                (FunctionDescriptor) descriptor.getOriginal(),
-                new LanguageVersionSettingsImpl(LanguageVersion.KOTLIN_1_2, ApiVersion.KOTLIN_1_2)
+                (FunctionDescriptor) descriptor.getOriginal(), TranslationContext.createLanguageVersionSettingsForCoroutines()
         );
     }
 
